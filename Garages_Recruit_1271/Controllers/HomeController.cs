@@ -8,6 +8,7 @@ using Garages_Recruit_1271.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Garages_Recruit_1271.Controllers
 {
@@ -30,8 +31,9 @@ namespace Garages_Recruit_1271.Controllers
         [Route("Home/Index")]
         public ViewResult Index()
         {
-            var userRepository= _userRepository.GetAllUsers();
-            return View(userRepository);
+             var userRepository= _userRepository.GetAllUsers();
+             return View(userRepository);
+            //return View();
 
         }
 
@@ -51,12 +53,14 @@ namespace Garages_Recruit_1271.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ViewResult Create()
         {
             return View();
         }
 
         [HttpGet]
+        [Authorize]
         public ViewResult Edit(int id)
         {
             User _user = _userRepository.GetUser(id);

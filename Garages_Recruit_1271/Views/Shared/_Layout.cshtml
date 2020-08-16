@@ -1,19 +1,21 @@
-﻿<!DOCTYPE html>
+﻿
+@inject SignInManager<IdentityUser> signInManager
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
    <!-- <meta name="viewport" content="width=device-width" /> -->
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width"/>
     <environment include="Development">
-        <link href="C:\Users\tamiro\.nuget\packages\bootstrap\4.5.2\contentFiles\any\any\wwwroot\css\bootstrap.css" rel="stylesheet" />
+        <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
         <script src="~/jquery/jquery.js"></script>
-        <script src="C:\Users\tamiro\.nuget\packages\bootstrap\4.5.2\contentFiles\any\any\wwwroot\js\bootstrap.js"></script>
+        <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="~/lib/bootstrap/js/bootstrap.js"></script>
     </environment>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
     <link href="C:\Users\tamiro\.nuget\packages\bootstrap\4.5.2\contentFiles\any\any\wwwroot\css\bootstrap.css" rel="stylesheet" />
-  <!--  <link href="~/css/site.css" rel="stylesheet" /> -->
     <title>@ViewBag.Title</title>
 </head>
 <body>
@@ -30,16 +32,29 @@
 
                 </span>
             </button>
-            <ul class="navbar-nav ">
-                <il class="nav-item">
-                    <a asp-action="index" asp-controller="home" class="nav-link">List</a>
-                </il>
-                <il class="nav-item">
-                    <a asp-action="create" asp-controller="home" class="nav-link">Create</a>
-                </il>
+            <ul class="navbar-nav ml-auto">
+                @if (signInManager.IsSignedIn(User))
+                {
+                    <il class="nav-item">
+                        <form method="post" asp-action="logout" asp-controller="account">
+                            <button type="submit" class="nav-link btn btn-link py-0" style="width:auto">
+                                Logout @User.Identity.Name
+                            </button>
+                        </form>
+                       
+                    </il>
+                }
+                else
+                {
                 <il class="nav-item">
                     <a asp-action="register" asp-controller="account" class="nav-link">Register</a>
                 </il>
+                <il class="nav-item">
+                    <a asp-action="Login" asp-controller="account" class="nav-link">Login</a>
+                </il>
+                }
+
+
             </ul>
         </nav>
         <div >
