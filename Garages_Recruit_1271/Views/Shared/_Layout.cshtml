@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <!-- <meta name="viewport" content="width=device-width" /> -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <environment include="Development">
+        <link href="C:\Users\tamiro\.nuget\packages\bootstrap\4.5.2\contentFiles\any\any\wwwroot\css\bootstrap.css" rel="stylesheet" />
+        <script src="~/jquery/jquery.js"></script>
+        <script src="C:\Users\tamiro\.nuget\packages\bootstrap\4.5.2\contentFiles\any\any\wwwroot\js\bootstrap.js"></script>
+    </environment>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <link href="C:\Users\tamiro\.nuget\packages\bootstrap\4.5.2\contentFiles\any\any\wwwroot\css\bootstrap.css" rel="stylesheet" />
+  <!--  <link href="~/css/site.css" rel="stylesheet" /> -->
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <div class="container">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <a class="navbar-brand" asp-action="index" asp-controller="home">
+                <img src="~/images/employee.png" height="30" width="30" />
+            </a>
+            <button type="button" class="navbar-toggler" data-toggle="collaps" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon">
+
+                </span>
+            </button>
+            <ul class="navbar-nav ">
+                <il class="nav-item">
+                    <a asp-action="index" asp-controller="home" class="nav-link">List</a>
+                </il>
+                <il class="nav-item">
+                    <a asp-action="create" asp-controller="home" class="nav-link">Create</a>
+                </il>
+                <il class="nav-item">
+                    <a asp-action="register" asp-controller="account" class="nav-link">Register</a>
+                </il>
+            </ul>
+        </nav>
+        <div >
+            @RenderBody()
+        </div>
+        @if (IsSectionDefined("Scripts"))
+        {
+            @RenderSection("scripts", required: true)
+        }
+    </div>
+</body>
+</html>
