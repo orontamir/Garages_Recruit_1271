@@ -29,11 +29,16 @@ namespace Garages_Recruit_1271
             services.AddDbContextPool<AppDbContext>
                (options => options.UseSqlServer(_config.GetConnectionString("GaragesRecruit1271Connection")));
 
+            services.Configure<DataProtectionTokenProviderOptions>(o =>
+                       o.TokenLifespan = TimeSpan.FromHours(5));
+
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 10;
                 options.Password.RequiredUniqueChars = 0;
-            }).AddEntityFrameworkStores<AppDbContext>();
+                options.SignIn.RequireConfirmedEmail = true;
+            }).AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
             services.AddMvc().AddXmlSerializerFormatters(); ;
            // services.AddSingleton<IUserRepository, MockUserRepository>();
             services.AddScoped<IUserRepository, SQLUserRepository>();
