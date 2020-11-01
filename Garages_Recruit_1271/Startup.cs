@@ -54,7 +54,11 @@ namespace Garages_Recruit_1271
               
                 app.UseDeveloperExceptionPage();
             }
-
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
+            }
            // FileServerOptions fileServerOption = new FileServerOptions();
            // fileServerOption.DefaultFilesOptions.DefaultFileNames.Clear();
            // fileServerOption.DefaultFilesOptions.DefaultFileNames.Add("foo.html");
