@@ -6,12 +6,18 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Garages_Recruit_1271.Controllers
 {
     
     public class ErrorController : Controller
     {
+        private readonly ILogger<ErrorController> _logger;
+        public ErrorController(ILogger<ErrorController> logger)
+        {
+            this._logger = logger;
+        }
         [Route("Error/{StatusCode}")]
         public IActionResult HttpStatusCodeHandler(int statusCode)
         {
@@ -21,8 +27,7 @@ namespace Garages_Recruit_1271.Controllers
             {
                 case 404:
                     ViewBag.ErrorMessage = "Sorry, the resource you requested could not be found";
-                    ViewBag.Path = statusCodeResult.OriginalPath;
-                    ViewBag.QS = statusCodeResult.OriginalQueryString;
+                    _logger.LogWarning($"404 Error Occured. Path = {statusCodeResult.OriginalPath} and Query String = {statusCodeResult.OriginalQueryString}");
                     break;
             }
             return View("NotFound");
@@ -34,6 +39,7 @@ namespace Garages_Recruit_1271.Controllers
         public IActionResult Error()
         {
             var exceptionDetails = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+            _logger.LogError($"The path {exceptionDetails.Path} throw an exception {exceptionDetails.Error}");
             ViewBag.ExceptionPath = exceptionDetails.Path;
             ViewBag.ExceptionMessage = exceptionDetails.Error.Message;
             ViewBag.Stacktrace = exceptionDetails.Error.StackTrace;
