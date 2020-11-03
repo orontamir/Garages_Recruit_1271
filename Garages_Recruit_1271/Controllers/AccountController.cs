@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Garages_Recruit_1271.Models;
 using Garages_Recruit_1271.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,11 +14,11 @@ namespace Garages_Recruit_1271.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<AccountController> _logger;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager,ILogger<AccountController> logger)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,ILogger<AccountController> logger)
         {
             this._userManager = userManager;
             this._signInManager = signInManager;
@@ -26,6 +28,30 @@ namespace Garages_Recruit_1271.Controllers
         public IActionResult Register()
         {
             return View();
+        }
+
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+        {
+            returnUrl = returnUrl ?? Url.Content("~/");
+            LoginViewModel loginView = new LoginViewModel
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+
+            if (remoteError != null)
+            {
+                ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
+                return View("Login", loginView);
+            }
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                ModelState.AddModelError(string.Empty, "Error loading external login information");
+                return View("Login", loginView);
+            }
+            var email = info.Principal.FindFirst(ClaimTypes.Email);
+            ApplicationUser user = null;
         }
 
 
@@ -51,7 +77,7 @@ namespace Garages_Recruit_1271.Controllers
             
            if (ModelState.IsValid)
             {
-                var user = new IdentityUser
+                var user = new ApplicationUser
                 {
                     UserName = model.Email,
                     Email = model.Email
@@ -132,7 +158,11 @@ namespace Garages_Recruit_1271.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
-                 
+                if (user != null && !user.EmailConfirmed && (await _userManager.CheckPasswordAsync(user,model.password)))
+                {
+                    ModelState.AddModelError(string.Empty, "Email not confirmed yet");
+                    return View(model);
+                }
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.password,model.rememberMe,false);
                 if (result.Succeeded)
                 {
