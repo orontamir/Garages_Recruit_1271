@@ -50,8 +50,57 @@ namespace Garages_Recruit_1271.Controllers
                 ModelState.AddModelError(string.Empty, "Error loading external login information");
                 return View("Login", loginView);
             }
-            var email = info.Principal.FindFirst(ClaimTypes.Email);
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
             ApplicationUser user = null;
+            if (email !=null)
+            {
+                user = await _userManager.FindByEmailAsync(email);
+                if (user != null && !user.EmailConfirmed)
+                {
+                    ModelState.AddModelError(string.Empty, "Email not confirmed yet");
+                    return View("Login", loginView);
+                }
+
+            }
+            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            if (signInResult.Succeeded)
+            {
+                return LocalRedirect(returnUrl);
+
+            }
+            else
+            {
+                if (email != null)
+                {
+                    if (user == null)
+                    {
+                        user = new ApplicationUser
+                        {
+                            UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                        };
+                        await  _userManager.CreateAsync(user);
+                        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        var confirmationLink = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token = token }, Request.Scheme);
+
+                        _logger.Log(LogLevel.Warning, confirmationLink);
+
+                        ViewBag.ErrorTitle = "Registration successful";
+                        ViewBag.ErrorMessage = "Before you can login , please confirm your email, by clicking on the confirmation link we have emailed you";
+                        return View("Error");
+
+
+
+                    }
+
+                    await _userManager.AddLoginAsync(user, info);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return LocalRedirect(returnUrl);
+                }
+                ViewBag.ErrprTitle = $"Email claim not received from : {info.LoginProvider}";
+                ViewBag.ErrorMessage = $"Please contact support on Pragim@PragimTech.com";
+                return View("Error");
+            }
         }
 
 

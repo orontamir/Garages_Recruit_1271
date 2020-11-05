@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Garages_Recruit_1271.Utilities;
 using Microsoft.AspNetCore.Authentication;
 
 namespace Garages_Recruit_1271.ViewModels
@@ -11,6 +12,7 @@ namespace Garages_Recruit_1271.ViewModels
     {
         [Required]
         [EmailAddress]
+        [ValidationEmailDomain(allowedDomain:"pragimtech.com", ErrorMessage = "Email domain must be pragimtech.com")]
         public string Email { get; set; }
 
         [Required]
@@ -20,5 +22,6 @@ namespace Garages_Recruit_1271.ViewModels
         [Display(Name = "Remember me")]
         public bool rememberMe { get; set; }
         public List<AuthenticationScheme> ExternalLogins { get; internal set; }
+        public string ReturnUrl { get; internal set; }
     }
 }
