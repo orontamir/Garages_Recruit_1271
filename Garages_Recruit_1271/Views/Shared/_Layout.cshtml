@@ -32,7 +32,24 @@
 
                 </span>
             </button>
+            <ul class="navbar-nav ml-auto" >
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropDownMenuLink" 
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Manage
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropDownMenuLink">
+                        <a class="dropdown-item" asp-controller="account"
+                           asp-action="ChangePassword">Password</a>
+                        <a class="dropdown-item" asp-controller="account"
+                           asp-action="ChangePassword">Password</a>
+                        <a class="dropdown-item" asp-controller="account"
+                           asp-action="ChangePassword">Password</a>
+                    </div>
+                </li>
+            </ul>
             <ul class="navbar-nav ml-auto">
+               
                 @if (signInManager.IsSignedIn(User))
                 {
                     <il class="nav-item">
@@ -41,17 +58,17 @@
                                 Logout @User.Identity.Name
                             </button>
                         </form>
-                       
+
                     </il>
                 }
                 else
                 {
-                <il class="nav-item">
-                    <a asp-action="register" asp-controller="account" class="nav-link">Register</a>
-                </il>
-                <il class="nav-item">
-                    <a asp-action="Login" asp-controller="account" class="nav-link">Login</a>
-                </il>
+                    <il class="nav-item">
+                        <a asp-action="register" asp-controller="account" class="nav-link">Register</a>
+                    </il>
+                    <il class="nav-item">
+                        <a asp-action="Login" asp-controller="account" class="nav-link">Login</a>
+                    </il>
                 }
 
 

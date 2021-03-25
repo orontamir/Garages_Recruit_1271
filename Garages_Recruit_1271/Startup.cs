@@ -12,6 +12,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Garages_Recruit_1271.Security;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace Garages_Recruit_1271
 {
@@ -47,10 +49,11 @@ namespace Garages_Recruit_1271
             services.Configure<DataProtectionTokenProviderOptions>(o => o.TokenLifespan = TimeSpan.FromHours(5));
             //Change token lifespan of just the email configuration token type
             services.Configure<CustomEmailConfirmationTokenProviderOptions>(o => o.TokenLifespan = TimeSpan.FromDays(3));
-            services.AddMvc().AddXmlSerializerFormatters(); ;
+            services.AddMvc().AddXmlSerializerFormatters();
            // services.AddSingleton<IUserRepository, MockUserRepository>();
             services.AddScoped<IUserRepository, SQLUserRepository>();
-           
+            services.AddSingleton<DataProtectionPurposeStrings>();
+
            
         }
 

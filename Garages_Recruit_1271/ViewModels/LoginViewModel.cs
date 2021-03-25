@@ -12,7 +12,7 @@ namespace Garages_Recruit_1271.ViewModels
     {
         [Required]
         [EmailAddress]
-        [ValidationEmailDomain(allowedDomain:"pragimtech.com", ErrorMessage = "Email domain must be pragimtech.com")]
+       // [ValidationEmailDomain(allowedDomain:"pragimtech.com", ErrorMessage = "Email domain must be pragimtech.com")]
         public string Email { get; set; }
 
         [Required]

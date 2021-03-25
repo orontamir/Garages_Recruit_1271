@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
+using Garages_Recruit_1271.Security;
 
 namespace Garages_Recruit_1271.Controllers
 {
@@ -18,12 +20,14 @@ namespace Garages_Recruit_1271.Controllers
         private readonly IUserRepository _userRepository;
 
         private readonly IHostingEnvironment _hostingEnvironment;
+        //private readonly IDataProtector protector;
 
-
-        public HomeController(IUserRepository userRepository, IHostingEnvironment hostingEnvironment)
+        public HomeController(IUserRepository userRepository, IHostingEnvironment hostingEnvironment,
+            IDataProtectionProvider dataProtectionProvider, DataProtectionPurposeStrings dataProtectionPurposeStrings)
         {
             _userRepository = userRepository;
             this._hostingEnvironment = hostingEnvironment;
+      //      protector = dataProtectionProvider.CreateProtector(dataProtectionPurposeStrings.EmployeeIdRouteValue);
         }
      
         [Route("")]
@@ -37,13 +41,15 @@ namespace Garages_Recruit_1271.Controllers
 
         }
 
+        
 
-        [Route("Home/Details/{id?}")]
-        public ViewResult Details(int? id)
+       // [Route("Home/Details/{id?}")]
+        public ViewResult Details(int id)
         {
+          //  int userId = Convert.ToInt32(protector.Unprotect(id));
             HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
             {
-                User = _userRepository.GetUser(id??1),
+                User = _userRepository.GetUser(id),
                 PageTitle = "User Details"
             };
            //  User model = _userRepository.GetUser(1);
